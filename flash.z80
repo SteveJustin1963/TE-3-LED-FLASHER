@@ -1,0 +1,33 @@
+    ORG 0000h      ; Start of ROM
+
+START:
+    LD SP, 0BFFh   ; Set stack pointer within RAM (top of available RAM)
+                   ; Adjust as needed based on actual RAM size
+
+MAIN_LOOP:
+    LD A, 0FFh     ; Turn LED ON (assuming active high)
+    OUT (5), A     ; Output to port 5
+    CALL DELAY     ; Wait
+
+    LD A, 00h      ; Turn LED OFF
+    OUT (5), A     ; Output to port 5
+    CALL DELAY     ; Wait
+
+    JP MAIN_LOOP   ; Repeat forever
+
+; ---------------------------------
+; Define RAM Variables
+; ---------------------------------
+    ORG 0800h      ; Start of RAM (Variables, Buffers)
+
+; ---------------------------------
+; Simple delay routine (adjust loops for speed)
+; ---------------------------------
+DELAY:
+    LD BC, 0FFFFh  ; Large loop counter
+DELAY_LOOP:
+    DEC BC         ; Decrease counter
+    LD A, B
+    OR C
+    JP NZ, DELAY_LOOP  ; Repeat until BC = 0
+    RET
